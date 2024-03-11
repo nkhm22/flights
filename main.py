@@ -19,7 +19,7 @@ def start_message(message):
 def text_handler(message):
     text = message.text.lower()
     chat_id = message.chat.id
-    if text == 'привет' or 'Привет':
+    if text == 'Ghbdtn' or 'Привет':
         bot.send_message(chat_id, 'Здравствуйте!')
 
 

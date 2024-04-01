@@ -4,8 +4,6 @@ import requests
 import json
 from config_data import config
 from states.variables import Variables
-
-
 @bot.message_handler(commands=['low'])
 def handle_register(message: Message):
     bot.set_state(message.from_user.id, Variables.min_pr, message.chat.id)
@@ -15,12 +13,12 @@ def handle_register(message: Message):
 @bot.message_handler(state=Variables.min_pr)
 def handle_first_name(message: Message):
     res_min = requests.get(
-            f"https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin=VKO&destination=TBS&departure_at=2024-07-11&return_at=2024-07-20&unique=false&sorting=price&direct=false&cy=usd&limit={Variables.min_pr}&page=1&one_way=true&token={config.RAPID_API_KEY}")
+            f"https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin=MAD&destination=BCN&departure_at=2023-07&return_at=2023-08&unique=false&sorting=price&direct=false&cy=usd&limit={Variables.min_pr}&one_way=true&token={Variables.min_pr}&page=1&one_way=true&token={config.RAPID_API_KEY}")
     json_dict_min = json.loads(res_min.text)
     for elem in json_dict_min['data']:
         price = elem['price']
         departure_at = elem['departure_at']
         return_at = elem['return_at']
-        bot.send_message(message.from_user.id, f'Дата и время вылета в Тбилиси: {departure_at}\n'
+        bot.send_message(message.chat.id, f'Дата и время вылета в Тбилиси: {departure_at}\n'
                                           f'Дата и время возврата в Москву (Внуково): {return_at}\n'
-                                          f'Стоимость билетов: {price}\n', message.chat.id)
+                                          f'Стоимость билетов: {price}\n')

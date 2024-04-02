@@ -22,5 +22,5 @@ def get_low(message: Message):
         departure_at = elem['departure_at']
         return_at = elem['return_at']
         bot.send_message(message.from_user.id, f'Дата и время вылета в Тбилиси: {departure_at}\n'
-                                          f'Дата и время возврата в Москву (Внуково): {return_at}\n'
+                                          f'Дата и время возвращения в Москву (Внуково): {return_at}\n'
                                           f'Стоимость билетов: {price}\n', message.chat.id)

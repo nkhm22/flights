@@ -1,26 +1,33 @@
 from loader import bot
 from telebot.types import Message
-import requests
-import json
-from config_data import config
+from api import api
 from states.variables import Variables
 
 
 @bot.message_handler(commands=['custom'])
-def custom(message: Message) -> None:
-    bot.send_message(message.from_user.id, 'Введите диапазон вариантов цен через пробел:')
-    bot.set_state(message.from_user.id, Variables.custom_price, message.chat.id)
+def custom_start(message):
+    bot.set_state(message.from_user.id, Variables.start_price, message.chat.id)
+    bot.send_message(message.chat.id, 'Задайте диапазон цен(введите нижнюю границу):')
 
 
-@bot.message_handler(state=Variables.custom_price)
+@bot.message_handler(state=Variables.start_price)
+def custom_end(message):
+    bot.set_state(message.from_user.id, Variables.end_price, message.chat.id)
+    bot.send_message(message.chat.id, "Введите верхнюю границу")
+    with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
+        data['start_price'] = message.text
+
+
+@bot.message_handler(state=Variables.end_price)
 def get_custom(message: Message) -> None:
-    res_max = requests.get(
-    f"https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin=VKO&destination=TBS&departure_at=2024-07-11&return_at=2024-07-20&unique=false&sorting=price&direct=false&cy=usd&page=1&one_way=true&token={config.RAPID_API_KEY}")
-    json_dict_max = json.loads(res_max.text)
-    for elem in json_dict_max['data'][(int(Variables.custom_price.split()[0])):(int(Variables.custom_price.split()[1]))]:
-        price = elem['price']
-        departure_at = elem['departure_at']
-        return_at = elem['return_at']
-        bot.send_message(message.chat.id, f'Дата и время вылета в Тбилиси: {departure_at}\n'
-                                          f'Дата и время возврата в Москву (Внуково): {return_at}\n'
-                                          f'Стоимость билетов: {price}\n')
+    with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
+        data['end_price'] = message.text
+        for elem in api.json_dict['data']:
+            if elem['price'] <= int(data['end_price']) and elem['price'] >= int(data['start_price']):
+                price = elem['price']
+                departure_at = elem['departure_at']
+                return_at = elem['return_at']
+                bot.send_message(message.chat.id, f'Дата и время вылета в Тбилиси: {departure_at}\n'
+                                                  f'Дата и время возврата в Москву (Внуково): {return_at}\n'
+                                                  f'Стоимость билетов: {price}\n')
+    bot.delete_state(message.from_user.id, message.chat.id)

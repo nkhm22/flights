@@ -6,3 +6,4 @@ class Variables(StatesGroup):
     max_price = State()
     start_price = State()
     end_price = State()
+    messages = State()

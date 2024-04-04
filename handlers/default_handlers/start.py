@@ -6,4 +6,4 @@ from loader import bot
 def bot_start(message: Message):
     bot.send_message(message.chat.id,
     f"Привет, {message.from_user.full_name}!"
-    f" Я покажу тебе информацию об авиарейсах из Москвы (Внуково) в Тбилиси и обратно")
+    f" Я покажу тебе информацию об авиарейсах из Москвы (Внуково) в Тбилиси и обратно /help")

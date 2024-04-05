@@ -2,12 +2,15 @@ from loader import bot
 from telebot.types import Message
 from api import api
 from states.variables import Variables
+from handlers.custom_handlers import history
+import datetime
 
 
 @bot.message_handler(commands=['high'])
 def high(message: Message) -> None:
     bot.set_state(message.from_user.id, Variables.max_price, message.chat.id)
     bot.send_message(message.chat.id, 'Введите требуемое количество самых дорогих вариантов:')
+    history.for_history(message.text, datetime.datetime.now(), message.from_user.full_name)
 
 
 @bot.message_handler(state=Variables.max_price)

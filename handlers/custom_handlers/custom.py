@@ -2,12 +2,15 @@ from loader import bot
 from telebot.types import Message
 from api import api
 from states.variables import Variables
+from handlers.custom_handlers import history
+import datetime
 
 
 @bot.message_handler(commands=['custom'])
 def custom_start(message):
     bot.set_state(message.from_user.id, Variables.start_price, message.chat.id)
     bot.send_message(message.chat.id, 'Задайте диапазон цен(введите нижнюю границу):')
+    history.for_history(message.text, datetime.datetime.now(), message.from_user.full_name)
 
 
 @bot.message_handler(state=Variables.start_price)

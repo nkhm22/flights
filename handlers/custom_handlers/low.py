@@ -6,9 +6,6 @@ import datetime
 from handlers.custom_handlers import history
 
 
-
-
-
 @bot.message_handler(commands=['low'])
 def low(message: Message):
     bot.set_state(message.from_user.id, Variables.min_price, message.chat.id)

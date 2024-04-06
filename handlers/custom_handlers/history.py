@@ -15,7 +15,7 @@ def for_history(text, date_time, user):
 def history(message):
     conn = sqlite3.connect('my_database.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Commands ORDER BY date_time DESC LIMIT 10')
+    cursor.execute('SELECT * FROM Commands ORDER BY date_time DESC')
     users = cursor.fetchall()
     count = 0
     for user in users:

@@ -1,9 +1,10 @@
 import sqlite3
 from loader import bot
+import os
 
 
 def for_history(text, date_time, user):
-    connection = sqlite3.connect('my_database.db')
+    connection = sqlite3.connect(os.path.join("database", "my_database.db"))
     cursor = connection.cursor()
     cursor.execute('INSERT INTO Commands (text, date_time, user) VALUES (?, ?, ?)',
                    (text, date_time, user))
@@ -13,7 +14,7 @@ def for_history(text, date_time, user):
 
 @bot.message_handler(commands=["history"])
 def history(message):
-    conn = sqlite3.connect('my_database.db')
+    conn = sqlite3.connect(os.path.join("database", "my_database.db"))
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Commands ORDER BY date_time DESC')
     users = cursor.fetchall()

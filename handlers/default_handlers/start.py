@@ -4,6 +4,7 @@ from handlers.custom_handlers import history
 import datetime
 from states.variables import Variables
 import sqlite3
+import os
 
 
 @bot.message_handler(commands=["start"])
@@ -29,9 +30,10 @@ def memory_dates(message):
     bot.set_state(message.from_user.id, Variables.date_from, message.chat.id)
     with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
         data['date_from'] = message.text
-    connection = sqlite3.connect('my_database.db')
+    connection = sqlite3.connect(os.path.join("database", "my_database.db"))
     cur = connection.cursor()
     cur.execute('INSERT INTO dates (to_tbs, from_tbs, user, date_time) VALUES (?, ?, ?, ?)',
                (data['date_to'], data['date_from'], message.from_user.full_name, datetime.datetime.now()))
     connection.commit()
     connection.close()
+    bot.delete_state(message.from_user.id, message.chat.id)

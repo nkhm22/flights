@@ -37,7 +37,7 @@ def get_custom(message: Message) -> None: #Вывод вариантов в ди
                     bot.send_message(message.chat.id, f'Дата и время вылета в Тбилиси: {departure_at}\n'
                                                       f'Дата и время возврата в Москву (Внуково): {return_at}\n'
                                                       f'Стоимость билетов: {price}\n')
-
+        bot.delete_state(message.from_user.id, message.chat.id)
     else:
         bot.send_message(message.from_user.id, 'Введите цену в рублях')
-    bot.delete_state(message.from_user.id, message.chat.id)
+

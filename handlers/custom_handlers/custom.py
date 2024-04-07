@@ -6,7 +6,7 @@ from handlers.custom_handlers import history
 import datetime
 
 
-@bot.message_handler(commands=['custom'])
+@bot.message_handler(commands=['custom']) #Приветствие команды "Диапазон" и запрос минимальной цены
 def custom_start(message: Message) -> None:
     bot.set_state(message.from_user.id, Variables.start_price, message.chat.id)
     bot.send_message(message.chat.id, 'Задайте диапазон цен(введите нижнюю границу):')
@@ -14,7 +14,7 @@ def custom_start(message: Message) -> None:
 
 
 @bot.message_handler(state=Variables.start_price)
-def custom_end(message: Message) -> None:
+def custom_end(message: Message) -> None: #Запрос максимальной цены
     if message.text.isdigit():
         bot.set_state(message.from_user.id, Variables.end_price, message.chat.id)
         bot.send_message(message.chat.id, "Введите верхнюю границу")
@@ -25,7 +25,7 @@ def custom_end(message: Message) -> None:
 
 
 @bot.message_handler(state=Variables.end_price)
-def get_custom(message: Message) -> None:
+def get_custom(message: Message) -> None: #Вывод вариантов в диапазоне
     if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['end_price'] = message.text

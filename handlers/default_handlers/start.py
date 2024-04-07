@@ -8,7 +8,7 @@ import os
 
 
 @bot.message_handler(commands=["start"])
-def bot_start(message: Message):
+def bot_start(message: Message): #Приветствие бота и запрос даты отправления
     bot.set_state(message.from_user.id, Variables.date_to, message.chat.id)
     bot.send_message(message.chat.id,
     f"Привет, {message.from_user.full_name}!"
@@ -18,7 +18,7 @@ def bot_start(message: Message):
 
 
 @bot.message_handler(state=Variables.date_to)
-def from_tbs(message):
+def from_tbs(message): #Запрос даты возвращения
     bot.send_message(message.chat.id, 'Введите дату вылета обратно в формате ГГГГ-ММ-ДД')
     bot.set_state(message.from_user.id, Variables.date_from, message.chat.id)
     with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
@@ -26,7 +26,7 @@ def from_tbs(message):
 
 
 @bot.message_handler(state=Variables.date_from)
-def memory_dates(message):
+def memory_dates(message): #Внесение в базу данных дат отправления и возвращения
     bot.set_state(message.from_user.id, Variables.date_from, message.chat.id)
     with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
         data['date_from'] = message.text

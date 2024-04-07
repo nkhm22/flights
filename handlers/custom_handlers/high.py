@@ -6,7 +6,7 @@ from handlers.custom_handlers import history
 import datetime
 
 
-@bot.message_handler(commands=['high'])
+@bot.message_handler(commands=['high']) #Запрос требуемого количества самых дорогих вариантов
 def high(message: Message) -> None:
     bot.set_state(message.from_user.id, Variables.max_price, message.chat.id)
     bot.send_message(message.chat.id, 'Введите требуемое количество самых дорогих вариантов:')
@@ -14,7 +14,7 @@ def high(message: Message) -> None:
 
 
 @bot.message_handler(state=Variables.max_price)
-def get_high(message: Message) -> None:
+def get_high(message: Message) -> None: #Вывод требуемого количества самых дорогих вариантов
     if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['max_price'] = message.text

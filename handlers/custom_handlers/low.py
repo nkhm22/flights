@@ -7,7 +7,7 @@ from handlers.custom_handlers import history
 
 
 @bot.message_handler(commands=['low'])
-def low(message: Message):
+def low(message: Message): #Запрос требуемого количества самых дешевых вариантов
     bot.set_state(message.from_user.id, Variables.min_price, message.chat.id)
     bot.send_message(message.from_user.id, 'Введите требуемое количество самых дешевых вариантов:')
     datetime.datetime.now()
@@ -15,7 +15,7 @@ def low(message: Message):
 
 
 @bot.message_handler(state=Variables.min_price)
-def get_low(message: Message):
+def get_low(message: Message): #Вывод требуемого количества самых дешевых вариантов
     if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['min_price'] = message.text

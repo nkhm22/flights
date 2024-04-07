@@ -3,7 +3,7 @@ from loader import bot
 import os
 
 
-def for_history(text, date_time, user):
+def for_history(text, date_time, user): #Функция для добавления в базу данных команд от пользователя для вывода истории
     connection = sqlite3.connect(os.path.join("database", "my_database.db"))
     cursor = connection.cursor()
     cursor.execute('INSERT INTO Commands (text, date_time, user) VALUES (?, ?, ?)',
@@ -13,7 +13,7 @@ def for_history(text, date_time, user):
 
 
 @bot.message_handler(commands=["history"])
-def history(message):
+def history(message): #Функция для вывода истории
     conn = sqlite3.connect(os.path.join("database", "my_database.db"))
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Commands ORDER BY date_time DESC')
@@ -25,3 +25,4 @@ def history(message):
             bot.send_message(message.chat.id, f'Команда: {str(user[1])}, дата и время запроса: {str(user[2])}')
             if count == 10:
                 break
+    conn.close()

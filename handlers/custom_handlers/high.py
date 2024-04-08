@@ -23,7 +23,6 @@ def get_high(message: Message) -> None:
 
     if message.text.isdigit():
         json_dict = api.api_date()
-        bot.send_message(message.chat.id, 'Введите корректные коды ИАТА аэропортов')
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['max_price'] = message.text
         for elem in json_dict['data'][(len(json_dict['data']) - int(data['max_price'])):len(json_dict['data'])]:
@@ -33,6 +32,7 @@ def get_high(message: Message) -> None:
             bot.send_message(message.chat.id, f'Дата и время вылета: {departure_at}\n'
                                               f'Дата и время возврата: {return_at}\n'
                                               f'Стоимость билетов: {price}\n')
+        bot.send_message(message.chat.id, '/help')
         bot.delete_state(message.from_user.id, message.chat.id)
     else:
         bot.send_message(message.from_user.id, 'Количество должно быть числом')

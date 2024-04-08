@@ -33,6 +33,7 @@ def get_low(message: Message):
             bot.send_message(message.from_user.id, f'Дата и время вылета: {departure_at}\n'
                                                    f'Дата и время возвращения: {return_at}\n'
                                                    f'Стоимость билетов в рублях: {price}\n')
+        bot.send_message(message.chat.id, '/help')
         bot.delete_state(message.from_user.id, message.chat.id)
     else:
         bot.send_message(message.from_user.id, 'Количество должно быть числом')

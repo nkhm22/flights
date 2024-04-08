@@ -25,4 +25,5 @@ def history(message): #Функция для вывода истории
             bot.send_message(message.chat.id, f'Команда: {str(user[1])}, дата и время запроса: {str(user[2])}')
             if count == 10:
                 break
+    conn.commit()
     conn.close()

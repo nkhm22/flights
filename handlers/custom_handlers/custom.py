@@ -6,15 +6,21 @@ from handlers.custom_handlers import history
 import datetime
 
 
-@bot.message_handler(commands=['custom']) #Приветствие команды "Диапазон" и запрос минимальной цены
+@bot.message_handler(commands=['custom'])
 def custom_start(message: Message) -> None:
+
+    # Приветствие команды "Диапазон" и запрос минимальной цены
+
     bot.set_state(message.from_user.id, Variables.start_price, message.chat.id)
     bot.send_message(message.chat.id, 'Задайте диапазон цен(введите нижнюю границу):')
     history.for_history(message.text, datetime.datetime.now(), message.from_user.full_name)
 
 
 @bot.message_handler(state=Variables.start_price)
-def custom_end(message: Message) -> None: #Запрос максимальной цены
+def custom_end(message: Message) -> None:
+
+    # Запрос максимальной цены
+
     if message.text.isdigit():
         bot.set_state(message.from_user.id, Variables.end_price, message.chat.id)
         bot.send_message(message.chat.id, "Введите верхнюю границу")
@@ -25,12 +31,15 @@ def custom_end(message: Message) -> None: #Запрос максимальной
 
 
 @bot.message_handler(state=Variables.end_price)
-def get_custom(message: Message) -> None: #Вывод вариантов в диапазоне
+def get_custom(message: Message) -> None:
+
+    # Вывод вариантов в диапазоне
+
     if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['end_price'] = message.text
-            for elem in api.json_dict['data']:
-                if elem['price'] <= int(data['end_price']) and elem['price'] >= int(data['start_price']):
+            for elem in api.api_date()['data']:
+                if int(data['start_price']) <= elem['price'] <= int(data['end_price']):
                     price = elem['price']
                     departure_at = elem['departure_at']
                     return_at = elem['return_at']
@@ -40,4 +49,3 @@ def get_custom(message: Message) -> None: #Вывод вариантов в ди
         bot.delete_state(message.from_user.id, message.chat.id)
     else:
         bot.send_message(message.from_user.id, 'Введите цену в рублях')
-

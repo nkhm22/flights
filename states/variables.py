@@ -8,3 +8,5 @@ class Variables(StatesGroup):
     end_price = State()
     date_to = State()
     date_from = State()
+    aero_from = State()
+    aero_to = State()
